@@ -1,0 +1,17 @@
+QuakeWatch/
+├─ app.py
+├─ requirements.txt
+├─ Dockerfile
+├─ docker-compose.yml
+├─ quakewatch-chart/
+│   ├─ Chart.yaml
+│   ├─ values.yaml
+│   ├─ templates/
+│   │   ├─ deployment.yaml
+│   │   ├─ service.yaml
+│   │   ├─ configmap.yaml
+│   │   └─ secret.yaml
+└─ .github/
+    └─ workflows/
+        └─ ci-cd.yml
+
