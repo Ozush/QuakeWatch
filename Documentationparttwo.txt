@@ -1,0 +1,54 @@
+minikube start
+ 1192  minikube stop
+ 1193  minikube start
+ 1194  minikube delete && minikube start
+ 1195  minikube addons enable metrics-server
+ 1196  ls
+ 1197  cd Part\ 2
+ 1198  ls
+ 1199  vim pod.yaml
+ 1200  vim pod.yaml 
+ 1201  kubectl apply -f pod.yaml
+ 1202  kubectl get pods
+ 1203  kubectl port-forward pods/quakewatch-pod 5001:5001
+ 1204  ls
+ 1205  vi mdeployment.yaml
+ 1206  ls
+ 1207  rm -rf mdeployment.yaml
+ 1208  vim deployment.yaml
+ 1209  kubectl apply -f deployment.yaml
+ 1210  kubectl get deployments.apps
+ 1211  kubectl get deployments
+ 1212  kubectl get pods
+ 1213  vim service.yaml
+ 1214  kubectl apply -f service.yaml
+ 1215  kubectl get service
+ 1216  minikube service quakewatch-service\n# OR http://\<node-ip\>:30001\n
+ 1217  vim configmap.yaml
+ 1218  vim secret.yaml
+ 1219  vim cronjob.yaml
+ 1220  kubectl apply -f cronjob.yaml
+ 1221  kubectl get cronjobs
+ 1222  kubectl apply -f deployment.yaml\n
+ 1223  kubectl get p
+ 1224  kubectl get pods
+ 1225  kubectl describe pod quakewatch-deployment-76f5b9fb8b-9rpxq\n
+ 1226  kubectl get configmaps\nkubectl get secrets\n
+ 1227  kubectl get configmaps\n
+ 1228  kubectl create configmap quakewatch-config \\n  --from-literal=GREETING="Hello from ConfigMap\n
+ 1229  kubectl create configmap quakewatch-config\n  --from-literal=GREETING="Hello from ConfigMap\n
+ 1230  ls
+ 1231  kubectl apply -f configmap.yaml
+ 1232  kubectl apply -f deployment.yaml\n
+ 1233  kubectl get pods
+ 1234  kubectl get configmaps\n
+ 1235  kubectl get pods
+ 1236  kubectl remove quakewatch-deployment-76f5b9fb8b-9rpxq
+ 1237  kubectl delete quakewatch-deployment-76f5b9fb8b-9rpxq
+ 1238  kubectl delete 76f5b9fb8b-9rpxq
+ 1239  kubectl delete 9rpxq
+ 1240  kubectl get secrets\n
+ 1241  kubectl apply -f secret.yaml
+ 1242  kubectl get secrets\n
+ 1243  kubectl rollout restart deployment quakewatch-deployment\nkubectl get pods\n
+ 1244  kubectl get pods\n

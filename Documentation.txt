@@ -1,0 +1,20 @@
+1171  vim app.py
+ 1172  vim requirements.txt
+ 1173  vim Dockerfile 
+ 1174  vim docker-compose.yml
+ 1175  vim README.md
+ 1176  docker build -t quakewatch:latest .\n
+ 1177  docker run -d -p 5001:5001 --name quakewatch quakewatch:latest\n
+ 1178  docker-compose up --build\n
+ 1179  docker-compose\n
+ 1180  docker compose up\n
+ 1181  lsof -i :5001\n
+ 1182  docker ps -a\n
+ 1183  docker rm 071f55f3fc3f
+ 1184  docker ps -a\n
+ 1185  docker login\n
+ 1186  docker tag quakewatch:latest <your-dockerhub-username>/quakewatch:latest\n
+ 1187  docker tag quakewatch:latest soulgamer/quakewatch:latest\n
+ 1188  docker push <your-dockerhub-username>/quakewatch:latest\n
+ 1189  docker push quakewatch:latest soulgamer/quakewatch:latest\n
+ 1190  docker push soulgamer/quakewatch:latest\n

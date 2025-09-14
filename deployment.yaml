@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quakewatch-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: quakewatch
+  template:
+    metadata:
+      labels:
+        app: quakewatch
+    spec:
+      containers:
+        - name: quakewatch
+          image: soulgamer/quakewatch:latest
+          ports:
+            - containerPort: 5001
+          env:
+            - name: GREETING
+              valueFrom:
+                configMapKeyRef:
+                  name: quakewatch-config
+                  key: GREETING
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: quakewatch-secret
+                  key: PASSWORD
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+              httpGet:
+                path: /
+                port: 5001
+              initialDelaySeconds: 5
+              periodSeconds: 5
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
+
+
