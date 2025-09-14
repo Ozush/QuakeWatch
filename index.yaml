@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  quakewatch-chart:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-09-14T14:48:03.107892+03:00"
+    description: Helm chart for QuakeWatch Flask app
+    digest: 3d5e3118d99080fe09f26b379268c7e06b12dd353e406a888315abbf567e62dd
+    name: quakewatch-chart
+    type: application
+    urls:
+    - https://ozush.github.io/quakewatch-helm-repo/quakewatch-chart-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-09-14T14:48:03.106785+03:00"

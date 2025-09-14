@@ -1,0 +1,24 @@
+replicaCount: 3
+
+image:
+  repository: soulgamer/quakewatch
+  tag: latest
+
+service:
+  type: ClusterIP
+  port: 5001
+
+greeting: "Hello from Helm!"
+password: "qwerty123"
+
+serviceAccount:
+  create: false
+  name: ""
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths: ["/"]
+  tls: []
