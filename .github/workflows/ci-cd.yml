@@ -1,43 +1,23 @@
-name: Build and Deploy QuakeWatch
+build:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    - name: Build Docker image
+      env:
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      run: docker build -t "$DOCKER_HUB_USERNAME/quakewatch:latest" .
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Log in to Docker Hub
+      env:
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      run: |
+        echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/quakewatch:latest .
-
-      - name: Log in to Docker Hub
-        env:
-          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        run: |
-          echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-
-      - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/quakewatch:latest
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
-
-      - name: Deploy Helm chart
-        run: helm upgrade --install quakewatch-release ./quakewatch-chart
+    - name: Push Docker image
+      env:
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      run: docker push "$DOCKER_HUB_USERNAME/quakewatch:latest"
 
