@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: quakewatch-alerts
+  namespace: monitoring
+spec:
+  groups:
+  - name: quakewatch.rules
+    rules:
+    - alert: HighErrorRate
+      expr: rate(errors_total[5m]) > 5
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High error rate detected for QuakeWatch"
+        description: "More than 5 errors per minute detected."
+    - alert: PodCrashLooping
+      expr: kube_pod_container_status_restarts_total{namespace="quakewatch"} > 2
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "QuakeWatch pod is crashing repeatedly"
+
