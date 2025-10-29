@@ -1,4 +1,4 @@
-name: QuakeWatch CI/CD
+name: Build and Deploy QuakeWatch
 
 on:
   push:
@@ -10,27 +10,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Build Docker image
-        run: docker build -t soulgamer/quakewatch:latest .
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/quakewatch:latest .
 
-      - name: Push Docker image
+      - name: Log in to Docker Hub
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         run: |
-          echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-$DOCKER_HUB_PASSWORD
-          docker push $DOCKER_HUB_USERNAME/quakewatch:latest
+          echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/quakewatch:latest
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'latest'
+
       - name: Deploy Helm chart
         run: helm upgrade --install quakewatch-release ./quakewatch-chart
+
