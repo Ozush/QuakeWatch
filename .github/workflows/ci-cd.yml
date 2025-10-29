@@ -1,4 +1,4 @@
-name: Build and Deploy QuakeWatch
+name: QuakeWatch CI/CD Pipeline
 
 on:
   push:
@@ -7,31 +7,58 @@ on:
     branches: [ main ]
 
 jobs:
+  # 🧱 BUILD STAGE
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/quakewatch:latest .
-
-      - name: Log in to Docker Hub
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        run: |
-          echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+        run: docker build -t "$DOCKER_HUB_USERNAME/quakewatch:latest" .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/quakewatch:latest
 
-  deploy:
+  # 🧪 TEST STAGE (Matrix Build)
+  test:
     runs-on: ubuntu-latest
     needs: build
+    strategy:
+      matrix:
+        python-version: [ "3.9", "3.10", "3.11" ]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+
+      - name: Run pylint
+        run: pylint $(git ls-files '*.py')
+
+  # 🚢 DEPLOY STAGE
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
@@ -40,4 +67,3 @@ jobs:
 
       - name: Deploy Helm chart
         run: helm upgrade --install quakewatch-release ./quakewatch-chart
-
